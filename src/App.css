@@ -1,0 +1,33 @@
+/* Custom styles for the taxi app */
+
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(255, 193, 7, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 193, 7, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Custom hover effects */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+}
