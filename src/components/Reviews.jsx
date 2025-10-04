@@ -41,7 +41,7 @@ const Reviews = () => {
               <div className="flex flex-col items-start">
                 <div className="flex items-center space-x-1">
                   {[1,2,3,4,5].map((star) => (
-                    <Star key={star} className="h-5 w-5 text-yellow-400" />
+                    <Star key={star} className="h-5 w-5 text-blue-400" />
                   ))}
                 </div>
                 <div className="text-sm text-gray-500">Highest traveler appreciation in the Netherlands</div>
@@ -76,7 +76,7 @@ const Reviews = () => {
                   </div>
                   <div className="flex items-center space-x-1">
                     <div className="text-lg font-bold text-gray-900">{review.rating}</div>
-                    <Star className="h-4 w-4 text-yellow-400" />
+                    <Star className="h-4 w-4 text-blue-400" />
                   </div>
                 </div>
 

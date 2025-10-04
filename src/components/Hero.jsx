@@ -1,256 +1,301 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from './ui/card'
 import { Button } from './ui/button'
-import { MapPin, Clock, Calendar, Phone, Shield, Users, Star, CheckCircle } from 'lucide-react'
+import { Calendar, Phone, Shield, Users, Star, Briefcase, X, Wind } from 'lucide-react'
 
 const Hero = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isReturn, setIsReturn] = useState(false)
+  const [stops, setStops] = useState([])
   const [bookingData, setBookingData] = useState({
     pickup: '',
     destination: '',
-    date: '',
-    time: '',
-    passengers: '1',
-    vehicleType: 'standard'
+    passengers: 1,
+    vehicleType: 'Sedan (1-4)',
+    acType: 'AC',
+    luggage: 'No Luggage',
+    pickupDate: '',
+    pickupTime: '',
+    returnDate: '',
+    returnTime: ''
   })
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  
   const backgroundImages = [
-    'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-    'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
     'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
   ]
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        (prevIndex + 1) % backgroundImages.length
-      )
-    }, 4000) // Change image every 4 seconds
-
+      setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length)
+    }, 4000)
     return () => clearInterval(interval)
   }, [])
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setBookingData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+  const getVehicleByPassengers = (num) => {
+    if (num <= 4) return 'Sedan (1-4)'
+    if (num <= 6) return 'SUV (1-6)'
+    if (num <= 8) return 'Minibus (1-8)'
+    return 'Luxury'
   }
 
   const handleBooking = () => {
-    // Simple validation
-    if (!bookingData.pickup || !bookingData.destination || !bookingData.date || !bookingData.time) {
+    const { pickup, destination, passengers, pickupDate, pickupTime } = bookingData
+    if (!pickup || !destination || !passengers || !pickupDate || !pickupTime) {
       alert('Please fill in all required fields')
       return
     }
-    
-    alert(`Taxi booked successfully!\nFrom: ${bookingData.pickup}\nTo: ${bookingData.destination}\nDate: ${bookingData.date}\nTime: ${bookingData.time}\nPassengers: ${bookingData.passengers}`)
+
+    const pickupDT = `${pickupDate} ${pickupTime}`
+    const returnDT = isReturn ? `${bookingData.returnDate} ${bookingData.returnTime}` : ''
+
+    alert(
+      `Taxi booked successfully!
+Passengers: ${passengers}
+From: ${pickup}
+Stops: ${stops.join(', ')}
+To: ${destination}
+Pickup: ${pickupDT}
+${isReturn ? `Return: ${returnDT}\n` : ''}
+Vehicle: ${bookingData.vehicleType} (${bookingData.acType})
+Luggage: ${bookingData.luggage}`
+    )
   }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setBookingData((prev) => {
+      if (name === 'passengers') {
+        if (value === '') return { ...prev, passengers: '' }
+        const num = Math.max(1, Math.min(16, Number(value)))
+        const autoVehicle = getVehicleByPassengers(num)
+        const currentCap = getVehicleByPassengers(prev.passengers || 1)
+        return {
+          ...prev,
+          passengers: num,
+          vehicleType:
+            prev.vehicleType === currentCap || prev.passengers === ''
+              ? autoVehicle
+              : prev.vehicleType
+        }
+      }
+      if (name === 'vehicleType') {
+        const currentNum = Number(prev.passengers)
+        const requiredVehicle = getVehicleByPassengers(currentNum || 1)
+        const vehicles = ['Sedan (1-4)', 'SUV (1-6)', 'Minibus (1-8)', 'Luxury']
+        if (vehicles.indexOf(value) < vehicles.indexOf(requiredVehicle)) {
+          alert(`You cannot select a smaller vehicle for ${currentNum} passengers.`)
+          return prev
+        }
+      }
+      return { ...prev, [name]: value }
+    })
+  }
+
+  const addStop = () => setStops([...stops, ''])
+  const removeStop = (i) => setStops(stops.filter((_, index) => index !== i))
+  const handleStopChange = (i, value) => {
+    const updated = [...stops]
+    updated[i] = value
+    setStops(updated)
+  }
+
   return (
-    <section 
-      className="min-h-screen h-auto lg:h-[120vh] relative bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
+    <section
+      className="min-h-screen relative bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${backgroundImages[currentImageIndex]}')`
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)),url('${backgroundImages[currentImageIndex]}')`
       }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 min-h-screen">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-screen items-center py-10">
-          
-          {/* Left Side - Content */}
+
+          {/* LEFT CONTENT */}
           <div className="text-white space-y-6 py-8">
-            <div className="pt-4">
-              <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-                Premium Taxi
-                <span className="block text-yellow-400">Service</span>
-              </h1>
-              <p className="text-lg lg:text-xl mb-6 text-gray-200">
-                Reliable, Safe & Comfortable rides across the Netherlands
-              </p>
-            </div>
-
-            <div className="space-y-4 py-4">
-              <div className="flex items-center space-x-3">
-                <div className="bg-blue-500 p-2 rounded-full">
-                  <Shield className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold">TX-Keurmerk Certified</h3>
-                  <p className="text-sm text-gray-300">National quality mark in taxi industry</p>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <div className="bg-green-500 p-2 rounded-full">
-                  <Users className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold">5000+ Professional Drivers</h3>
-                  <p className="text-sm text-gray-300">Experienced & certified taxi drivers</p>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <div className="bg-yellow-500 p-2 rounded-full">
-                  <Star className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold">4.8/5 Rating</h3>
-                  <p className="text-sm text-gray-300">Highly rated by thousands of customers</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 mb-4">
-              <h3 className="text-lg font-bold mb-3">Why Choose Us?</h3>
-              <ul className="space-y-1 text-sm text-gray-200">
-                <li>✓ No hidden charges - transparent pricing</li>
-                <li>✓ Free cancellation up to 3 hours before</li>
-                <li>✓ Professional drivers with clean vehicles</li>
-                <li>✓ Coverage across Netherlands, Germany & Belgium</li>
-              </ul>
-            </div>
+            <h1 className="text-4xl lg:text-5xl font-bold">
+              Premium Taxi <span className="block text-yellow-400">Service</span>
+            </h1>
+            <p className="text-lg lg:text-xl text-gray-200">
+              Reliable, Safe & Comfortable rides across the Netherlands
+            </p>
           </div>
 
-          {/* Right Side - Booking Form */}
-          <div className="flex justify-center lg:justify-end py-8">
-            <Card className="bg-white/95 backdrop-blur-sm shadow-2xl max-w-sm w-full">
-            <CardContent className="p-8">
-              <div className="text-center mb-6 pt-2">
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Book Your Taxi</h1>
-                <p className="text-sm text-gray-600">Quick and reliable taxi booking</p>
-              </div>
-              
-              {/* Booking Form */}
-              <div className="space-y-4 mb-6 py-2">
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Pickup Location *
-                  </label>
-                  <div className="relative">
-                    <MapPin className="absolute left-2 top-2 h-4 w-4 text-gray-400" />
+          {/* RIGHT FORM */}
+          <div className="flex justify-center lg:justify-end">
+            <Card className="bg-white/95 backdrop-blur-sm shadow-2xl max-w-xl mt-12 w-full">
+              <CardContent className="p-4 space-y-4">
+
+                <div className="text-center">
+                  <h1 className="text-2xl font-bold text-gray-900">Book Your Reliable Vehicle</h1>
+                  
+                </div>
+
+                {/* PASSENGERS, VEHICLE, AC */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Passengers</label>
                     <input
-                      type="text"
-                      name="pickup"
-                      value={bookingData.pickup}
-                      onChange={handleInputChange}
-                      placeholder="Enter pickup address"
-                      className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Destination *
-                  </label>
-                  <div className="relative">
-                    <MapPin className="absolute left-2 top-2 h-4 w-4 text-gray-400" />
-                    <input
-                      type="text"
-                      name="destination"
-                      value={bookingData.destination}
-                      onChange={handleInputChange}
-                      placeholder="Enter destination address"
-                      className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Date *
-                    </label>
-                    <div className="relative">
-                      <Calendar className="absolute left-2 top-2 h-4 w-4 text-gray-400" />
-                      <input
-                        type="date"
-                        name="date"
-                        value={bookingData.date}
-                        onChange={handleInputChange}
-                        min={new Date().toISOString().split('T')[0]}
-                        className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Time *
-                    </label>
-                    <div className="relative">
-                      <Clock className="absolute left-2 top-2 h-4 w-4 text-gray-400" />
-                      <input
-                        type="time"
-                        name="time"
-                        value={bookingData.time}
-                        onChange={handleInputChange}
-                        className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Passengers
-                    </label>
-                    <select
+                      type="number"
                       name="passengers"
+                      min="1"
+                      max="16"
                       value={bookingData.passengers}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                      <option value="1">1 Passenger</option>
-                      <option value="2">2 Passengers</option>
-                      <option value="3">3 Passengers</option>
-                      <option value="4">4 Passengers</option>
-                      <option value="5">5+ Passengers</option>
-                    </select>
+                      onChange={handleChange}
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
                   </div>
-
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Vehicle Type
-                    </label>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Vehicle</label>
                     <select
                       name="vehicleType"
                       value={bookingData.vehicleType}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={handleChange}
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="standard">Standard</option>
-                      <option value="luxury">Luxury</option>
-                      <option value="electric">Electric</option>
-                      <option value="minibus">Minibus (8p)</option>
+                      <option>Sedan (1-4)</option>
+                      <option>SUV (1-6)</option>
+                      <option>Minibus (1-8)</option>
+                      <option>Luxury</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Vehicle Type</label>
+                   <select
+                      name="vehicleType"
+                      value={bookingData.vehicleType}
+                      onChange={handleChange}
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option>Ac</option>
+                      <option>Non-Ac</option>
+                      <option>Luxery</option>
                     </select>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-4 py-4 pb-2">
-                <Button 
+                {/* JOURNEY */}
+                <div className="space-y-3 pt-2 border-t border-gray-200">
+                  <label className="block text-xs font-medium text-gray-700 ">Pickup</label>
+                  <input
+                    type="text"
+                    name="pickup"
+                    placeholder="Pickup address"
+                    value={bookingData.pickup}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg"
+                  />
+                  <button onClick={addStop} className="text-xs text-blue-600 mt-1">+ Add Stop</button>
+
+                  {stops.map((stop, i) => (
+                    <div key={i} className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        placeholder={`Stop ${i + 1}`}
+                        value={stop}
+                        onChange={(e) => handleStopChange(i, e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg"
+                      />
+                      <button onClick={() => removeStop(i)} className="text-red-500">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+
+                  <label className="block text-xs font-medium text-gray-700 ">Destination</label>
+                  <input
+                    type="text"
+                    name="destination"
+                    placeholder="Destination address"
+                    value={bookingData.destination}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg"
+                  />
+
+                  {/* Pickup Date & Time */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Pickup Date</label>
+                      <input
+                        type="date"
+                        value={bookingData.pickupDate}
+                        onChange={(e) => setBookingData(prev => ({ ...prev, pickupDate: e.target.value }))}
+                        className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Pickup Time</label>
+                      <input
+                        type="time"
+                        value={bookingData.pickupTime}
+                        onChange={(e) => setBookingData(prev => ({ ...prev, pickupTime: e.target.value }))}
+                        className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Return Trip */}
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={isReturn}
+                      onChange={() => setIsReturn(!isReturn)}
+                    />
+                    <label className="text-sm text-gray-700">Return Trip</label>
+                  </div>
+
+                  {isReturn && (
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Return Date</label>
+                        <input
+                          type="date"
+                          value={bookingData.returnDate}
+                          onChange={(e) => setBookingData(prev => ({ ...prev, returnDate: e.target.value }))}
+                          className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Return Time</label>
+                        <input
+                          type="time"
+                          value={bookingData.returnTime}
+                          onChange={(e) => setBookingData(prev => ({ ...prev, returnTime: e.target.value }))}
+                          className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Luggage */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Luggage</label>
+                    <select
+                      name="luggage"
+                      value={bookingData.luggage}
+                      onChange={handleChange}
+                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg"
+                    >
+                      <option>No Luggage</option>
+                      <option>Standard</option>
+                      <option>Extra</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <Button
                   onClick={handleBooking}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base py-3"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base py-3 mt-6"
                 >
                   Book Your Taxi Now
                 </Button>
-                
-                <div className="text-center pb-2">
-                  <p className="text-xs text-gray-600 mb-1">Need immediate assistance?</p>
-                  <div className="flex items-center justify-center space-x-1 text-blue-600">
-                    <Phone className="h-3 w-3" />
-                    <span className="text-xs font-semibold">Call: +31 (0)20 123 4567</span>
-                  </div>
+
+                <div className="text-center text-xs text-gray-600 pt-2">
+                  <p>Need help? <Phone className="inline h-3 w-3 mx-1 text-blue-600" /> +31 (0)20 123 4567</p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        
+              </CardContent>
+            </Card>
+          </div>
+
         </div>
       </div>
     </section>

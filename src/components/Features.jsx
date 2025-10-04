@@ -89,18 +89,18 @@ const Features = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-2xl p-10 text-center mb-16 shadow-lg">
-          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Trusted by Thousands</h3>
+        <div className="bg-gradient-to-r from-gray-500 to-gray-700 rounded-2xl p-10 text-center mb-16 shadow-lg">
+          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-8">Trusted by Thousands</h3>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
                 <div key={index} className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-white/25 rounded-full mb-2 shadow-inner">
-                    <IconComponent className="h-5 w-5 text-gray-900" />
+                    <IconComponent className="h-5 w-5 text-white" />
                   </div>
-                  <div className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{stat.number}</div>
-                  <div className="text-gray-900 text-sm">{stat.label}</div>
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">{stat.number}</div>
+                  <div className="text-white text-sm">{stat.label}</div>
                 </div>
               );
             })}
@@ -122,7 +122,7 @@ const Features = () => {
                   <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gray-300 z-0"></div>
                 )}
                 <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-yellow-400 to-yellow-500 text-gray-900 rounded-full text-lg font-bold mb-4 shadow-md">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-full text-lg font-bold mb-4 shadow-md">
                     {process.step}
                   </div>
                   <h4 className="text-lg font-bold text-gray-900 mb-2">{process.title}</h4>

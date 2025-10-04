@@ -46,7 +46,7 @@ const Footer = () => {
   ]
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-gray-200 text-white">
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -54,46 +54,45 @@ const Footer = () => {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-2 mb-6">
-              <div className="p-2 bg-yellow-400 rounded-lg">
-                <Car className="h-6 w-6 text-gray-900" />
+              <div className="p-2 bg-gradient-to-r from-gray-600 to-gray-900 rounded-lg">
+                <Car className="h-6 w-6 text-white" />
               </div>
-              <span className="text-2xl font-bold">Taxi</span>
             </div>
             
-            <p className="text-gray-300 mb-6 leading-relaxed">
+            <p className="text-gray-900 mb-6 leading-relaxed">
               Your reliable transportation partner, providing safe, comfortable, and affordable rides 24/7. 
               Experience the difference with Taxi.
             </p>
             
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-yellow-400" />
-                <span className="text-gray-300">+1 (555) 123-4567</span>
+                <Phone className="h-5 w-5 text-blue-400" />
+                <span className="text-gray-900">+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-yellow-400" />
-                <span className="text-gray-300">info@Taxi.com</span>
+                <Mail className="h-5 w-5 text-blue-400" />
+                <span className="text-gray-900">info@Taxi.com</span>
               </div>
               <div className="flex items-center space-x-3">
-                <MapPin className="h-5 w-5 text-yellow-400" />
-                <span className="text-gray-300">123 Main St, City, State 12345</span>
+                <MapPin className="h-5 w-5 text-blue-400" />
+                <span className="text-gray-900">123 Main St, City, State 12345</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Clock className="h-5 w-5 text-yellow-400" />
-                <span className="text-gray-300">24/7 Service Available</span>
+                <Clock className="h-5 w-5 text-blue-400" />
+                <span className="text-gray-900">24/7 Service Available</span>
               </div>
             </div>
           </div>
           
           {/* Services Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Services</h3>
+            <h3 className="text-lg text-gray-900 font-semibold mb-6">Services</h3>
             <ul className="space-y-3">
               {footerLinks.services.map((link, index) => (
                 <li key={index}>
                   <a 
                     href={link.href} 
-                    className="text-gray-300 hover:text-yellow-400 transition-colors duration-200"
+                    className="text-blue-900 hover:text-yellow-400 transition-colors duration-200"
                   >
                     {link.name}
                   </a>
@@ -104,13 +103,13 @@ const Footer = () => {
           
           {/* Company Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Company</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Company</h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link, index) => (
                 <li key={index}>
                   <a 
                     href={link.href} 
-                    className="text-gray-300 hover:text-yellow-400 transition-colors duration-200"
+                    className="text-blue-900 hover:text-yellow-400 transition-colors duration-200"
                   >
                     {link.name}
                   </a>
@@ -121,13 +120,13 @@ const Footer = () => {
           
           {/* Support Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Support</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Support</h3>
             <ul className="space-y-3">
               {footerLinks.support.map((link, index) => (
                 <li key={index}>
                   <a 
                     href={link.href} 
-                    className="text-gray-300 hover:text-yellow-400 transition-colors duration-200"
+                    className="text-blue-900 hover:text-yellow-400 transition-colors duration-200"
                   >
                     {link.name}
                   </a>
@@ -141,8 +140,8 @@ const Footer = () => {
         <div className="mt-12 pt-8 border-t border-gray-800">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-xl font-semibold mb-2">Stay Updated</h3>
-              <p className="text-gray-300">
+              <h3 className="text-xl font-semibold text-blue-900 mb-2">Stay Updated</h3>
+              <p className="text-gray-900">
                 Subscribe to our newsletter for the latest updates, promotions, and travel tips.
               </p>
             </div>
@@ -152,7 +151,7 @@ const Footer = () => {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none text-white placeholder-gray-400"
               />
-              <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-8">
+              <Button className="bg-blue-400 hover:bg-blue-500 text-gray-900 font-semibold px-8">
                 Subscribe
               </Button>
             </div>

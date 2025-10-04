@@ -17,7 +17,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg">
+            <div className="p-3 bg-gradient-to-r from-gray-600 to-gray-900 rounded-xl shadow-lg">
               <Car className="h-6 w-6 text-white animate-bounce-slow" />
             </div>
             <span className="font-bold text-xl text-gray-800 tracking-wide">TaxiLux</span>
@@ -56,7 +56,8 @@ const Header = () => {
                 Log in
               </Button>
 
-              <Button className="flex items-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg transform hover:-translate-y-1 transition-transform duration-300">
+              {/* Download App Button with gray-900 */}
+              <Button className="flex items-center bg-gray-900 hover:bg-gray-800 text-white font-semibold shadow-lg">
                 <Download className="h-4 w-4 mr-2" />
                 Download App
               </Button>
@@ -108,7 +109,7 @@ const Header = () => {
                   <User className="h-4 w-4 mr-2" />
                   Log in
                 </Button>
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg">
+                <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold shadow-lg flex items-center justify-center">
                   <Download className="h-4 w-4 mr-2" />
                   Download App
                 </Button>
